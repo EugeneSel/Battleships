@@ -1,3 +1,4 @@
+package annexes;
 public interface IBoard { 
 
     /**
