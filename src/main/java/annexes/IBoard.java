@@ -1,4 +1,6 @@
 package annexes;
+import ships.*;
+
 public interface IBoard { 
 
     /**
