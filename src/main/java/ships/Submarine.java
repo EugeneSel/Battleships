@@ -2,7 +2,7 @@ package ships;
 
 public class Submarine extends AbstractShip {
     public Submarine() {
-        super(ShipType.S, ShipOrientation.NORTH);
+        super(ShipType.S, ShipOrientation.N);
     };
 
     public Submarine(ShipOrientation new_orientation) {
