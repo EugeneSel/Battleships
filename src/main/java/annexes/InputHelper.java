@@ -1,4 +1,5 @@
 package annexes;
+
 import ships.*;
 import java.util.Arrays;
 import java.util.Scanner;
@@ -41,11 +42,12 @@ public final class InputHelper {
                 String[] in = sin.nextLine().toLowerCase().split(" ");
                 if (in.length == 2) {
                     String coord = in[0];
-                    ShipOrientation shipType = ShipOrientation.valid(in[1]);
+                    ShipOrientation orientation = ShipOrientation.valid(in[1]);
                     
-                    if (shipType != null) {
+                    if (orientation != null) {
                         res.x = coord.charAt(0) - 'a';
                         res.y = Integer.parseInt(coord.substring(1, coord.length())) - 1;
+                        res.orientation = orientation;
                         done = true;
                     }
                     
@@ -55,7 +57,7 @@ public final class InputHelper {
             }
 
             if (!done) {
-                System.err.println("Format incorrect! Entrez la position sous forme 'A0 n'");
+                System.err.println("Format incorrect! Entrez la position sous forme 'A1 n'");
             }
         } while (!done && sin.hasNextLine());
 

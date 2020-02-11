@@ -13,9 +13,9 @@ public enum ShipOrientation {
     };
 
     public static ShipOrientation valid(String valueToValidate) {
-        for (ShipOrientation shipType : ShipOrientation.values())
-            if (shipType.get_character().equals(valueToValidate)) {
-                return shipType;
+        for (ShipOrientation orientation : ShipOrientation.values())
+            if (orientation.get_character().equals(valueToValidate)) {
+                return orientation;
             }
         
         return null;
