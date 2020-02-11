@@ -1,4 +1,4 @@
-package annexes;
+package board;
 import java.util.NoSuchElementException;
 
 public enum Hit {

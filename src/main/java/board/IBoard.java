@@ -1,4 +1,5 @@
-package annexes;
+package board;
+
 import ships.*;
 
 public interface IBoard { 
@@ -31,7 +32,7 @@ public interface IBoard {
      * @param x
      * @param y
      */
-    void setHit(boolean hit, int x, int y);
+    void setHit(HitType hit, int x, int y);
 
     /**
      * Get the state of a hit at the given position
@@ -39,5 +40,5 @@ public interface IBoard {
      * @param y
      * @return true if the hit is successful
      */
-    Boolean getHit(int x, int y);
+    HitType getHit(int x, int y);
 }
