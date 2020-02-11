@@ -1,51 +1,20 @@
-package annexes;
+package board;
+import ships.*;
 
 import java.lang.instrument.IllegalClassFormatException;
 
-public class Board {
+public class Board implements IBoard {
+    public static final int DEFAULT_BOARD_SIZE = 10;
     protected String name;
     protected int size;
-    protected char[][] ships;
+    protected ShipType[][] ships;
     protected HitType[][] hits; 
-
+    
     public Board(String name, int size)
     {
         this.name = name;
         this.size = size;
-        ships = new char[size][size];
-        hits = new HitType[size][size];
-        for (int i = 0; i < size; i++) {
-            for (int j = 0; j < size; j++) {
-                hits[i][j] = HitType.NONE;
-            }
-        }
-    }
-
-    public void SetShips(char[][] ships){
-        this.ships = ships;
-    }
-
-    public void SetHits(HitType[][] hits){
-        this.hits = hits;
-    }
-
-    public char[][] GetShips(){
-        return this.ships;
-    }
-
-    public HitType[][] GetHits(){
-        return this.hits;
-    }
-
-    public int GetSize(){
-        return this.size;
-    }
-
-    public Board(String name)
-    {
-        this.name = name;
-        this.size = 10;
-        ships = new char[size][size];
+        ships = new ShipType[size][size];
         hits = new HitType[size][size];
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
@@ -54,8 +23,84 @@ public class Board {
         }
     }
     
+    public Board(String name)
+    {
+        this.name = name;
+        this.size = DEFAULT_BOARD_SIZE;
+        ships = new ShipType[size][size];
+        hits = new HitType[size][size];
+        for (int i = 0; i < size; i++) {
+            for (int j = 0; j < size; j++) {
+                hits[i][j] = HitType.NONE;
+            }
+        }
+    }
+
+    public void SetShips(ShipType[][] ships){
+        this.ships = ships;
+    }
+
+    public void SetHits(HitType[][] hits){
+        this.hits = hits;
+    }
+
+    public ShipType[][] GetShips(){
+        return this.ships;
+    }
+
+    public HitType[][] GetHits(){
+        return this.hits;
+    }
+
+    public int getSize(){
+        return this.size;
+    }
+
+    public boolean hasShip(int x, int y){
+        return (ships[x][y] != null);
+    }
+
+    public void setHit(HitType hit, int x, int y){
+        hits[x][y] = hit;
+    }
+
+    public HitType getHit(int x, int y){
+        return (hits[x][y]);
+    }
+
+    public void putShip(AbstractShip ship, int x, int y){
+        int size = ship.get_size();
+        while (size > 0) {
+            ships[x][y] = ship.get_type();
+            switch (ship.get_orientation()) {
+                case N:
+                    y--;
+                    break;
+
+                case S:
+                    y++;
+                    break;
+
+                case E:
+                    x++; 
+                    break;
+
+                case W:
+                    x--;
+                    break; 
+                           
+                default:
+                    break;
+            }
+            size--;
+        }       
+    }
+
+    
     public void print(){
         //System.out.println(name);
+        System.out.println();
+        System.out.println();
         System.out.print("SHIPS :");
         for (int i = 0; i < size*2 - 7; i++) {
             System.out.print(" "); 
@@ -89,15 +134,15 @@ public class Board {
                 System.out.print(spacing);
                 for (int j = 0; j < size; j++) {
                     if(k == 0){
-                        if (ships[i][j] == '\u0000') {
+                        if (ships[j][i] == null) {
                             System.out.print('.');
                         } else {
-                            System.out.print(ships[i][j]);
+                            System.out.print(ships[j][i]);
                         }
                     } else {
-                        if (hits[i][j] == HitType.NONE) {
+                        if (hits[j][i] == HitType.NONE) {
                             System.out.print('.');
-                        } else if (hits[i][j] == HitType.NONE){
+                        } else if (hits[j][i] == HitType.NONE){
                             System.out.print('O');
                         } else {
                             System.out.print('X');

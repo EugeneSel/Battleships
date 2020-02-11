@@ -1,4 +1,4 @@
-package annexes;
+package board;
 public enum HitType{
     NONE(0),HIT(1),MISS(2);
 
