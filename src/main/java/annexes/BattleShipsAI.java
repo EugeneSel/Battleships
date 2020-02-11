@@ -63,7 +63,7 @@ public class BattleShipsAI implements Serializable {
      */
     public void putShips(AbstractShip ships[]) {
         int x, y;
-        AbstractShip.Orientation o;
+        AbstractShip.ShipOrientation o;
         Random rnd = new Random();
         AbstractShip.Orientation[] orientations = AbstractShip.Orientation.values();
 
