@@ -5,7 +5,7 @@ public class Submarine extends AbstractShip {
         super(ShipType.S, ShipOrientation.N);
     };
 
-    public Submarine(ShipOrientation new_orientation) {
-        super(ShipType.S, new_orientation);
+    public Submarine(ShipOrientation newOrientation) {
+        super(ShipType.S, newOrientation);
     };
 }

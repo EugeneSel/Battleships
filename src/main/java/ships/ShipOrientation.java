@@ -14,15 +14,15 @@ public enum ShipOrientation {
 
     public static ShipOrientation valid(String valueToValidate) {
         for (ShipOrientation orientation : ShipOrientation.values())
-            if (orientation.get_character().equals(valueToValidate)) {
+            if (orientation.getCharacter().equals(valueToValidate)) {
                 return orientation;
             }
         
         return null;
     }
 
-    public int get_index() { return this.index; };
-    public String get_character() { return this.character; };
+    public int getIndex() { return this.index; };
+    public String getCharacter() { return this.character; };
     
-    public void set_index(int new_index) { this.index = new_index; };
+    public void setIndex(int newIndex) { this.index = newIndex; };
 }

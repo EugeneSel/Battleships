@@ -5,7 +5,7 @@ public class Destroyer extends AbstractShip {
         super(ShipType.D, ShipOrientation.N);
     };
 
-    public Destroyer(ShipOrientation new_orientation) {
-        super(ShipType.D, new_orientation);
+    public Destroyer(ShipOrientation newOrientation) {
+        super(ShipType.D, newOrientation);
     };
 }

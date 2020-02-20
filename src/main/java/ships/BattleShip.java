@@ -5,7 +5,7 @@ public class BattleShip extends AbstractShip {
         super(ShipType.B, ShipOrientation.N);
     };
 
-    public BattleShip(ShipOrientation new_orientation) {
-        super(ShipType.B, new_orientation);
+    public BattleShip(ShipOrientation newOrientation) {
+        super(ShipType.B, newOrientation);
     };
 }

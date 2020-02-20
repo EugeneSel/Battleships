@@ -7,8 +7,8 @@ public enum ShipType {
     private String name;
     private int size;
 
-    private ShipType(int desired_index) {
-        this.index = desired_index;
+    private ShipType(int desiredIndex) {
+        this.index = desiredIndex;
 
         switch (index) {
             case 0:
@@ -32,11 +32,11 @@ public enum ShipType {
         }
     };
 
-    public int get_index() { return this.index; };
-    public String get_name() { return this.name; };
-    public int get_size() { return this.size; };
+    public int getIndex() { return this.index; };
+    public String getName() { return this.name; };
+    public int getSize() { return this.size; };
 
-    public void set_index(int new_index) { this.index = new_index; };
-    public void set_name(String new_name) { this.name = new_name; };
-    public void set_size(int new_size) { this.size = new_size; };
+    public void setIndex(int newIndex) { this.index = newIndex; };
+    public void setName(String newName) { this.name = newName; };
+    public void setSize(int newSize) { this.size = newSize; };
 }

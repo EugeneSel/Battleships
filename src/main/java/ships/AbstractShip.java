@@ -5,20 +5,24 @@ public abstract class AbstractShip {
     protected String name;
     protected int size;
     protected ShipOrientation orientation;
+    protected int strikeCount;
 
-    public AbstractShip(ShipType new_type, ShipOrientation new_orientation) {
-        this.type = new_type;
-        this.name = new_type.get_name();
-        this.size = new_type.get_size();
-        this.orientation = new_orientation;
+    public AbstractShip(ShipType newType, ShipOrientation newOrientation) {
+        this.type = newType;
+        this.name = newType.getName();
+        this.size = newType.getSize();
+        this.orientation = newOrientation;
+        this.strikeCount = 0;
     };
 
-    public ShipType get_type() { return this.type; };
-    public String get_name() { return this.name; };
-    public int get_size() { return this.size; };
-    public ShipOrientation get_orientation() { return this.orientation; };
+    public ShipType getType() { return this.type; };
+    public String getName() { return this.name; };
+    public int getSize() { return this.size; };
+    public ShipOrientation getOrientation() { return this.orientation; };
+    public int getStrikeCount () { return this.strikeCount; };
 
-    public void set_name(String new_name) { this.name = new_name; };
-    public void set_size(int new_size) { this.size = new_size; };
-    public void set_orientation(ShipOrientation new_orientation) { this.orientation = new_orientation; };
+    public void setName(String newName) { this.name = newName; };
+    public void setSize(int newSize) { this.size = newSize; };
+    public void setOrientation(ShipOrientation newOrientation) { this.orientation = newOrientation; };
+    public void addStrike() { this.strikeCount++; }
 }

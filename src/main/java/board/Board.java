@@ -4,6 +4,8 @@ import ships.*;
 import java.lang.instrument.IllegalClassFormatException;
 
 public class Board implements IBoard {
+    public static final String ANSI_RESET = "\u001B[0m";
+    public static final String ANSI_RED = "\u001B[31m";
     public static final int DEFAULT_BOARD_SIZE = 10;
     protected String name;
     protected int size;
@@ -69,10 +71,10 @@ public class Board implements IBoard {
     }
 
     public void putShip(AbstractShip ship, int x, int y){
-        int size = ship.get_size();
+        int size = ship.getSize();
         while (size > 0) {
-            ships[x][y] = ship.get_type();
-            switch (ship.get_orientation()) {
+            ships[x][y] = ship.getType();
+            switch (ship.getOrientation()) {
                 case N:
                     y--;
                     break;
@@ -102,7 +104,7 @@ public class Board implements IBoard {
         System.out.println();
         System.out.println();
         System.out.print("SHIPS :");
-        for (int i = 0; i < size*2 - 7; i++) {
+        for (int i = 0; i < size * 2 - 7; i++) {
             System.out.print(" "); 
         }
         System.out.print('\t');
@@ -110,7 +112,7 @@ public class Board implements IBoard {
         System.out.print("HITS :");
         System.out.println();
         String spacing;
-        spacing = (size > 9) ? "   " : "  ";
+        spacing = (size > DEFAULT_BOARD_SIZE - 1) ? "   " : "  ";
         for (int i = 0; i < 2; i++) {
             char c = 'A';
             System.out.print(spacing);
@@ -125,12 +127,12 @@ public class Board implements IBoard {
         System.out.println();
         for (int i = 0; i < size; i++) {
             for (int k = 0; k < 2; k++) {
-                if (size > 9) {
-                    spacing = (i+1 > 9) ? " " : "  ";
+                if (size > DEFAULT_BOARD_SIZE - 1) {
+                    spacing = (i+1 > DEFAULT_BOARD_SIZE - 1) ? " " : "  ";
                 } else {
                     spacing = " ";
                 }
-                System.out.print(i+1);
+                System.out.print(i + 1);
                 System.out.print(spacing);
                 for (int j = 0; j < size; j++) {
                     if(k == 0){
@@ -142,10 +144,10 @@ public class Board implements IBoard {
                     } else {
                         if (hits[j][i] == HitType.NONE) {
                             System.out.print('.');
-                        } else if (hits[j][i] == HitType.NONE){
-                            System.out.print('O');
-                        } else {
+                        } else if (hits[j][i] == HitType.MISS){
                             System.out.print('X');
+                        } else {
+                            System.out.print(ANSI_RED + 'X' + ANSI_RESET);
                         }
                     }
                     System.out.print(' '); 
