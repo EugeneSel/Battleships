@@ -5,7 +5,7 @@ import java.util.List;
 import annexes.*;
 import ships.*;
 import board.*;
-
+import annexes.InputHelper.CoordInput;
 import annexes.InputHelper.ShipInput;
 
 public class App {
@@ -172,5 +172,17 @@ public class App {
         testboard.print();
 
         createShips(testboard);
+
+        CoordInput inputResult;
+        HitType newHit;
+        while (true) {
+            inputResult = InputHelper.readCoordInput();
+            newHit = testboard.sendHit(inputResult.x, inputResult.y);
+            testboard.setHit(newHit, inputResult.x, inputResult.y);
+            testboard.print();
+            if (newHit == HitType.KILL) {
+                System.out.println(testboard.GetShips()[inputResult.x][inputResult.y].getCurrentShip().getName() + " is Sunk\n");
+            }
+        }
     }
 }

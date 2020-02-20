@@ -12,8 +12,7 @@ public class Board implements IBoard {
     protected ShipState[][] ships;
     protected HitType[][] hits; 
     
-    public Board(String name, int size)
-    {
+    public Board(String name, int size) {
         this.name = name;
         this.size = size;
         ships = new ShipState[size][size];
@@ -25,8 +24,7 @@ public class Board implements IBoard {
         }
     }
     
-    public Board(String name)
-    {
+    public Board(String name) {
         this.name = name;
         this.size = DEFAULT_BOARD_SIZE;
         ships = new ShipState[size][size];
@@ -68,6 +66,18 @@ public class Board implements IBoard {
 
     public HitType getHit(int x, int y){
         return (hits[x][y]);
+    }
+
+    public HitType sendHit(int x, int y) {
+        if (ships[x][y] == null) 
+            return HitType.MISS;
+        else {
+            ships[x][y].addStrike();
+            if (ships[x][y].isSunk())
+                return HitType.KILL;
+            else
+                return HitType.HIT;
+        }
     }
 
     public void putShip(AbstractShip ship, int x, int y){

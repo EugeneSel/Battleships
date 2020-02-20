@@ -3,6 +3,7 @@ package annexes;
 import ships.*;
 import java.io.Serializable;
 import java.util.List;
+import board.*;
 
 public class Player {
     /* **
@@ -50,17 +51,25 @@ public class Player {
         } while (!done);
     }
 
-    public Hit sendHit(int[] coords) {
-        boolean done;
-        Hit hit = null;
+    public HitType sendHit(int[] coords) {
+        boolean done = false;
+        HitType hit = null;
 
         do {
-            System.out.println("où frapper?");
+            System.out.println("Make your shot:\n");
             InputHelper.CoordInput hitInput = InputHelper.readCoordInput();
-            // TODO call sendHit on this.opponentBoard
+            
+            if (board.GetHits()[hitInput.x][hitInput.y] == HitType.NONE)
+                hit = opponentBoard.sendHit(hitInput.x, hitInput.y);
+            else {
+                System.out.println("You have already shot there. Please, repeat entering\n");
+                continue;
+            }
 
-            // TODO : Game expects sendHit to return BOTH hit result & hit coords.
-            // return hit is obvious. But how to return coords at the same time ?
+            coords = new int[2];
+            coords[0] = hitInput.x;
+            coords[1] = hitInput.y;
+            done = true;  
         } while (!done);
 
         return hit;
