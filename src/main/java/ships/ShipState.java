@@ -1,10 +1,14 @@
 package ships;
 
 public class ShipState {
+    public static final String ANSI_RESET = "\u001B[0m";
+    public static final String ANSI_RED = "\u001B[31m";
     private AbstractShip currentShip;
     private boolean struck;
 
-    public ShipState() {
+    public ShipState(AbstractShip newShip) {
+        this.currentShip = newShip;
+        this.struck = false;
     };
 
     /**
@@ -36,8 +40,8 @@ public class ShipState {
 
     public String toString() {
         if (this.struck)
-            return "The ship is struck";
+            return ANSI_RED + currentShip.getType().toString() + ANSI_RESET;
         else
-            return "The ship is OK";
+            return currentShip.getType().toString();
     }
 }

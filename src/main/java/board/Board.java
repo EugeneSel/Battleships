@@ -9,14 +9,14 @@ public class Board implements IBoard {
     public static final int DEFAULT_BOARD_SIZE = 10;
     protected String name;
     protected int size;
-    protected ShipType[][] ships;
+    protected ShipState[][] ships;
     protected HitType[][] hits; 
     
     public Board(String name, int size)
     {
         this.name = name;
         this.size = size;
-        ships = new ShipType[size][size];
+        ships = new ShipState[size][size];
         hits = new HitType[size][size];
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
@@ -29,7 +29,7 @@ public class Board implements IBoard {
     {
         this.name = name;
         this.size = DEFAULT_BOARD_SIZE;
-        ships = new ShipType[size][size];
+        ships = new ShipState[size][size];
         hits = new HitType[size][size];
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
@@ -38,7 +38,7 @@ public class Board implements IBoard {
         }
     }
 
-    public void SetShips(ShipType[][] ships){
+    public void SetShips(ShipState[][] ships){
         this.ships = ships;
     }
 
@@ -46,7 +46,7 @@ public class Board implements IBoard {
         this.hits = hits;
     }
 
-    public ShipType[][] GetShips(){
+    public ShipState[][] GetShips(){
         return this.ships;
     }
 
@@ -73,7 +73,7 @@ public class Board implements IBoard {
     public void putShip(AbstractShip ship, int x, int y){
         int size = ship.getSize();
         while (size > 0) {
-            ships[x][y] = ship.getType();
+            ships[x][y] = new ShipState(ship);
             switch (ship.getOrientation()) {
                 case N:
                     y--;
@@ -128,7 +128,7 @@ public class Board implements IBoard {
         for (int i = 0; i < size; i++) {
             for (int k = 0; k < 2; k++) {
                 if (size > DEFAULT_BOARD_SIZE - 1) {
-                    spacing = (i+1 > DEFAULT_BOARD_SIZE - 1) ? " " : "  ";
+                    spacing = (i + 1 > DEFAULT_BOARD_SIZE - 1) ? " " : "  ";
                 } else {
                     spacing = " ";
                 }
@@ -139,7 +139,7 @@ public class Board implements IBoard {
                         if (ships[j][i] == null) {
                             System.out.print('.');
                         } else {
-                            System.out.print(ships[j][i]);
+                            System.out.print(ships[j][i].toString());
                         }
                     } else {
                         if (hits[j][i] == HitType.NONE) {

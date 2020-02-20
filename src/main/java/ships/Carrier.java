@@ -5,7 +5,7 @@ public class Carrier extends AbstractShip {
         super(ShipType.C, ShipOrientation.N);
     };
 
-    public Carrier(ShipOrientation new_orientation) {
-        super(ShipType.C, new_orientation);
+    public Carrier(ShipOrientation newOrientation) {
+        super(ShipType.C, newOrientation);
     };
 }
