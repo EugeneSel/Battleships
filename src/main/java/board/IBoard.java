@@ -49,4 +49,6 @@ public interface IBoard {
     * @return status for the hit (eg : strike or miss)
     */
     HitType sendHit(int x, int y);
+
+    public boolean isCloseToAnotherShip(int x, int y);
 }

@@ -1,6 +1,7 @@
 package annexes;
 
 import ships.*;
+import board.*;
 import java.io.*;
 import java.util.Arrays;
 import java.util.List;
@@ -24,22 +25,29 @@ public class Game {
      * *** Constructeurs
      */
     public Game() {
+        sin = new Scanner(System.in);
     }
 
     public Game init() {
         if (!loadSave()) {
             // init attributes
-            System.out.println("entre ton nom:");
+            System.out.println("Write down Your Name:");
 
-            // TODO use a scanner to read player name
+            String playerName = "";
+            try {
+                playerName = sin.nextLine();
+            } catch (Exception e) {
+                // nop
+            }
+            
+            Board boardPlayer = new Board(playerName);
+            Board boardAI = new Board("AI");
 
-            // TODO init boards
-            Board b1, b2;
+            player1 = new Player(boardPlayer, boardAI, createDefaultShips());
+            player2 = new AIPlayer(boardAI, boardPlayer, createDefaultShips());
 
-            // TODO init this.player1 & this.player2
-
-            b1.print();
-            // place player ships
+            boardPlayer.print(boardAI);
+            // place player ships:
             player1.putShips();
             player2.putShips();
         }
@@ -51,31 +59,48 @@ public class Game {
      */
     public void run() {
         int[] coords = new int[2];
-        Board b1 = player1.board;
-        Hit hit;
+        HitType hit;
 
         // main loop
-        b1.print();
+        player1.getBoard().print(player2.getBoard());
         boolean done;
+
         do {
-            hit = Hit.MISS; // TODO player1 send a hit
-            boolean strike = hit != Hit.MISS; // TODO set this hit on his board (b1)
+            boolean doneInput = false;
+
+            do {
+                System.out.println("Make your shot:\n");
+                InputHelper.CoordInput hitInput = InputHelper.readCoordInput();
+                
+                if (player1.getBoard().getHits()[hitInput.x][hitInput.y] != HitType.NONE) {
+                    System.out.println("You have already shot there. Please, repeat entering\n");
+                    continue;
+                }
+    
+                coords = new int[2];
+                coords[0] = hitInput.x;
+                coords[1] = hitInput.y;
+                doneInput = true;  
+            } while (!doneInput);
+
+            hit = player1.sendHit(coords);
+            player1.getBoard().setHit(hit, coords[0], coords[1]);
+            boolean strike = hit != HitType.MISS; // TODO set this hit on his board (player1.getBoard())
 
             done = updateScore();
-            b1.print();
-            System.out.println(makeHitMessage(false /* outgoing hit */, coords, hit));
+            System.out.println(makeHitMessage(player1, false /* outgoing hit */, coords, hit));
 
             save();
 
             if (!done && !strike) {
                 do {
-                    hit = Hit.MISS; // TODO player2 send a hit.
+                    hit = player2.sendHit(coords); // TODO player2 send a hit.
 
-                    strike = hit != Hit.MISS;
+                    strike = hit != HitType.MISS;
                     if (strike) {
-                        b1.print();
+                        player1.getBoard().print(player2.getBoard());
                     }
-                    System.out.println(makeHitMessage(true /* incoming hit */, coords, hit));
+                    System.out.println(makeHitMessage(player2, true /* incoming hit */, coords, hit));
                     done = updateScore();
 
                     if (!done) {
@@ -84,36 +109,38 @@ public class Game {
                 } while (strike && !done);
             }
 
+            player1.getBoard().print(player2.getBoard());
+
         } while (!done);
 
         SAVE_FILE.delete();
-        System.out.println(String.format("joueur %d gagne", player1.lose ? 2 : 1));
+        System.out.println(String.format("%s wins", player1.lose ? player2.getBoard().getName() : player1.getBoard().getName()));
         sin.close();
     }
 
     private void save() {
-        try {
-            // TODO bonus 2 : uncomment
-            // if (!SAVE_FILE.exists()) {
-            // SAVE_FILE.getAbsoluteFile().getParentFile().mkdirs();
-            // }
+        // try {
+        //     // TODO bonus 2 : uncomment
+        //     // if (!SAVE_FILE.exists()) {
+        //     // SAVE_FILE.getAbsoluteFile().getParentFile().mkdirs();
+        //     // }
 
-            // TODO bonus 2 : serialize players
+        //     // TODO bonus 2 : serialize players
 
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        // } catch (IOException e) {
+        //     e.printStackTrace();
+        // }
     }
 
     private boolean loadSave() {
         if (SAVE_FILE.exists()) {
-            try {
-                // TODO bonus 2 : deserialize players
+            // try {
+            //     // TODO bonus 2 : deserialize players
 
-                return true;
-            } catch (IOException | ClassNotFoundException e) {
-                e.printStackTrace();
-            }
+            //     return true;
+            // } catch (IOException | ClassNotFoundException e) {
+            //     e.printStackTrace();
+            // }
         }
         return false;
     }
@@ -136,20 +163,23 @@ public class Game {
         return false;
     }
 
-    private String makeHitMessage(boolean incoming, int[] coords, Hit hit) {
-        String msg;
+    private String makeHitMessage(Player player, boolean incoming, int[] coords, HitType hit) {
+        String msg = "";
         ColorUtil.Color color = ColorUtil.Color.RESET;
         switch (hit) {
         case MISS:
             msg = hit.toString();
             break;
-        case STIKE:
+        case HIT:
             msg = hit.toString();
             color = ColorUtil.Color.RED;
             break;
-        default:
-            msg = hit.toString() + " coulé";
+        case KILL:
+            msg = player.getOpponentBoard().getShips()[coords[0]][coords[1]].getCurrentShip().getName() + " is sunk";
             color = ColorUtil.Color.RED;
+            break;
+        default:
+            break;
         }
         msg = String.format("%s Frappe en %c%d : %s", incoming ? "<=" : "=>", ((char) ('A' + coords[0])),
                 (coords[1] + 1), msg);

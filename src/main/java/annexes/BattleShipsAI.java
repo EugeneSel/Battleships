@@ -69,6 +69,8 @@ public class BattleShipsAI implements Serializable {
         Random rnd = new Random();
         ShipOrientation[] orientations = ShipOrientation.values();
 
+        System.out.println("hola");
+
         for (AbstractShip s : ships) {
             do {
                 // TODO use Random to pick a random x, y & orientation
@@ -173,7 +175,7 @@ public class BattleShipsAI implements Serializable {
         int iy = y;
 
         for (int i = 0; i < ship.getSize(); ++i) {
-            if (board.hasShip(ix, iy)) {
+            if (board.hasShip(ix, iy) || board.isCloseToAnotherShip(ix, iy)) {
                 return false;
             }
             ix += dx;
@@ -188,7 +190,7 @@ public class BattleShipsAI implements Serializable {
     }
 
     private boolean isUndiscovered(int x, int y) {
-        return x >= 0 && x < size && y >= 0 && y < size && board.getHit(x, y) == null;
+        return x >= 0 && x < size && y >= 0 && y < size && board.getHit(x, y) == HitType.NONE;
     }
 
     private int[] pickRandomCoord() {
@@ -197,6 +199,7 @@ public class BattleShipsAI implements Serializable {
         int y;
 
         do {
+            
             x = rnd.nextInt(size);
             y = rnd.nextInt(size);
         } while (!isUndiscovered(x, y));

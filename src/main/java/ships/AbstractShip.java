@@ -25,4 +25,10 @@ public abstract class AbstractShip {
     public void setSize(int newSize) { this.size = newSize; };
     public void setOrientation(ShipOrientation newOrientation) { this.orientation = newOrientation; };
     public void addStrike() { this.strikeCount++; }
+
+    public boolean isSunk() {
+        if (this.strikeCount == this.size)
+            return true;
+        return false;
+    }
 }
