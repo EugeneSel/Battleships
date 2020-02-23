@@ -1,9 +1,9 @@
 package board;
 import ships.*;
 
-import java.lang.instrument.IllegalClassFormatException;
+import java.io.Serializable;
 
-public class Board implements IBoard {
+public class Board implements IBoard, Serializable {
     public static final String ANSI_RESET = "\u001B[0m";
     public static final String ANSI_RED = "\u001B[31m";
     public static final int DEFAULT_BOARD_SIZE = 10;

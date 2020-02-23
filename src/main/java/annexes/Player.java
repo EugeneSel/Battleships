@@ -5,7 +5,7 @@ import java.io.Serializable;
 import java.util.List;
 import board.*;
 
-public class Player {
+public class Player implements Serializable {
     public static final int NUMBER_OF_DESTROYERS = 1;
     public static final int NUMBER_OF_SUBMARINES = 2;
     public static final int NUMBER_OF_BATTLESHIPS = 1;

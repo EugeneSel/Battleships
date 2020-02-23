@@ -6,9 +6,15 @@ import java.io.*;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 
 public class Game {
-
     /*
      * *** Constante
      */
@@ -25,13 +31,17 @@ public class Game {
     /*
      * *** Constructeurs
      */
+    public Game() {
+        sin = new Scanner(System.in);
+    }
+
     public Game(boolean isMultiplayer) {
         this.isMultiplayer = isMultiplayer;
         sin = new Scanner(System.in);
     }
 
-    public Game init() {
-        if (!loadSave()) {
+    public Game init(boolean load) {
+        if (!load) {
             // init attributes
 
             String playerName1 = "";
@@ -78,6 +88,14 @@ public class Game {
             if (isMultiplayer)
                 boardPlayer2.print(boardPlayer1);
             player2.putShips();
+
+            System.out.println("You have reached checkpoint, game is saved.");
+            save();
+        } else if (load && !loadSave()) {
+            System.out.println("There is no any saved game, sorry\n");
+            // init attributes
+
+            return null;
         }
         return this;
     }
@@ -85,6 +103,9 @@ public class Game {
     /*
      * *** Méthodes
      */
+
+    public Boolean getIsMultiplayer() { return this.isMultiplayer; };
+
     public void run() {
         int[] coords = new int[2];
         HitType hit;
@@ -113,11 +134,12 @@ public class Game {
 
             hit = player1.sendHit(coords);
             player1.getBoard().setHit(hit, coords[0], coords[1]);
-            boolean strike = hit != HitType.MISS; // TODO set this hit on his board (player1.getBoard())
+            boolean strike = hit != HitType.MISS;
 
             done = updateScore();
             System.out.println(makeHitMessage(player1, false /* outgoing hit */, coords, hit));
 
+            System.out.println("You have reached checkpoint, game is saved.");
             save();
 
             if (!done && !strike) {
@@ -141,7 +163,7 @@ public class Game {
                             doneInput = true;  
                         } while (!doneInput);
                     }
-                    hit = player2.sendHit(coords); // TODO player2 send a hit.
+                    hit = player2.sendHit(coords);
                     if (isMultiplayer)
                         player2.getBoard().setHit(hit, coords[0], coords[1]);
 
@@ -153,6 +175,7 @@ public class Game {
                     done = updateScore();
 
                     if (!done) {
+                        System.out.println("You have reached checkpoint, game is saved.");
                         save();
                     }
                 } while (strike && !done);
@@ -168,28 +191,43 @@ public class Game {
     }
 
     private void save() {
-        // try {
-        //     // TODO bonus 2 : uncomment
-        //     // if (!SAVE_FILE.exists()) {
-        //     // SAVE_FILE.getAbsoluteFile().getParentFile().mkdirs();
-        //     // }
+        try {
+            if (!SAVE_FILE.exists()) {
+                SAVE_FILE.getAbsoluteFile().getParentFile().mkdirs();
+            }
 
-        //     // TODO bonus 2 : serialize players
+            FileOutputStream fileOutputStream = new FileOutputStream(SAVE_FILE);
+            ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
+            
+            objectOutputStream.writeObject(player1);
+            objectOutputStream.writeObject(player2);
+            objectOutputStream.writeObject(isMultiplayer);
 
-        // } catch (IOException e) {
-        //     e.printStackTrace();
-        // }
+            objectOutputStream.close();
+            fileOutputStream.close();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private boolean loadSave() {
         if (SAVE_FILE.exists()) {
-            // try {
-            //     // TODO bonus 2 : deserialize players
+            try {
+                FileInputStream fileInputStream = new FileInputStream(SAVE_FILE);
+                ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
+            
+                player1 = (Player) objectInputStream.readObject();
+                player2 = (Player) objectInputStream.readObject();
+                isMultiplayer = (Boolean) objectInputStream.readObject();
+                
+                objectInputStream.close();
+                fileInputStream.close();
 
-            //     return true;
-            // } catch (IOException | ClassNotFoundException e) {
-            //     e.printStackTrace();
-            // }
+                return true;
+            } catch (IOException | ClassNotFoundException e) {
+                e.printStackTrace();
+            }
         }
         return false;
     }

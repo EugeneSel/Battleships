@@ -6,7 +6,6 @@ import java.util.*;
 import board.*;
 
 public class BattleShipsAI implements Serializable {
-
     /*
      * ** Attributs
      */

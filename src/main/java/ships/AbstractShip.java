@@ -1,6 +1,8 @@
 package ships;
 
-public abstract class AbstractShip {
+import java.io.Serializable;
+
+public abstract class AbstractShip implements Serializable {
     protected final ShipType type;
     protected String name;
     protected int size;

@@ -13,9 +13,10 @@ public class App {
     }
 
     public static void main(String[] args) {
-        System.out.println("Choose the game mode:");
+        System.out.println("Choose the game mode or load a save:");
         System.out.println("s/S - Singleplayer");
         System.out.println("m/M - Multiplayer");
+        System.out.println("l/L - Load game");
 
         Scanner sin = new Scanner(System.in);
         char gameMode;
@@ -24,13 +25,25 @@ public class App {
         
         do {
             try {
-                gameMode = sin.next(".").charAt(0);
+                gameMode = sin.nextLine().charAt(0);
                 if (gameMode == 's' || gameMode == 'S') {
                     newGame = new Game(false);
+                    newGame.init(false);
                     done = true;
                 } else if (gameMode == 'm' || gameMode == 'M') {
                     newGame = new Game(true);
+                    newGame.init(false);
                     done = true;
+                } else if (gameMode == 'l' || gameMode == 'L') {
+                    newGame = new Game();
+                    if (newGame.init(true) == null) {
+                        done = false;
+                        System.out.println("Please, repeat entering:");
+                        System.out.println("s/S - Singleplayer");
+                        System.out.println("m/M - Multiplayer");
+                        System.out.println("l/L - Load game");
+                    } else
+                        done = true;
                 } else {
                     throw new Exception("Wrong choice. Please, repeat entering");
                 }
@@ -39,7 +52,6 @@ public class App {
             }
         } while (!done);
 
-        newGame.init();
         newGame.run();
     }
 }
