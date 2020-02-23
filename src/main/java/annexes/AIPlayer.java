@@ -4,7 +4,9 @@ import ships.*;
 import board.*;
 import java.io.Serializable;
 import java.util.List;
-
+/**
+ * Class used to represent the opponent when playing singleplayer
+ */
 public class AIPlayer extends Player {
     /*
      * ** Attribut

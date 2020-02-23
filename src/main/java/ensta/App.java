@@ -2,7 +2,9 @@ package ensta;
 
 import annexes.*;
 import java.util.Scanner;
-
+/**
+ * Manages the game, it contains the main and runs Battleships
+ */
 public class App {
     private static void sleep(int ms) {
         try {

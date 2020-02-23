@@ -4,7 +4,9 @@ import ships.*;
 import java.io.Serializable;
 import java.util.List;
 import board.*;
-
+/**
+ * Player Class used to identify a player with it's board
+ */
 public class Player implements Serializable {
     public static final int NUMBER_OF_DESTROYERS = 1;
     public static final int NUMBER_OF_SUBMARINES = 2;
@@ -148,7 +150,11 @@ public class Player implements Serializable {
             }
         }
     }
-
+    /**
+     * send a hit to the enemy in the given coordinates
+     * @param coords coordinates
+     * @return hit made
+     */
     public HitType sendHit(int[] coords) {
         HitType hit = null;
 
@@ -156,17 +162,47 @@ public class Player implements Serializable {
 
         return hit;
     }
-
+    /**
+     * returns the player's board
+     * @return board
+     */
     public Board getBoard() { return this.board; }
+    /**
+     * retunrs the opponent's board
+     * @return board
+     */
     public Board getOpponentBoard() { return this.opponentBoard; }
+    /**
+     * returns the amount of ships lost
+     * @return Destroyed count
+     */
     public int getDestroyedCount() { return this.destroyedCount; }
+    /**
+     * returns the ships of the player
+     * @return list of ships
+     */
     public AbstractShip[] getShips() {
         return ships;
     }
-
+    /**
+     * changes the board to the given board
+     * @param newBoard board to change to
+     */
     public void setBoard(Board newBoard) { this.board = newBoard; }
+    /**
+     * changes the opponent's board to the given board
+     * @param newOpponentBoard board to change to
+     */
     public void setOpponentBoard(Board newOpponentBoard) { this.opponentBoard = newOpponentBoard; }
+    /**
+     * changes the destroyed count to the given value
+     * @param newDestroyedCount value to change to
+     */
     public void setDestroyedCount(int newDestroyedCount) { this.destroyedCount = newDestroyedCount; }
+    /**
+     * changes the ships list to the given list
+     * @param ships list to change to
+     */
     public void setShips(AbstractShip[] ships) {
         this.ships = ships;
     }

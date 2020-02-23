@@ -13,7 +13,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-
+/**
+ * Class that control the game and runs it
+ */
 public class Game {
     /*
      * *** Constante
@@ -39,7 +41,11 @@ public class Game {
         this.isMultiplayer = isMultiplayer;
         sin = new Scanner(System.in);
     }
-
+    /**
+     * initialises the game
+     * @param load if true runs the saved file
+     * @return null if load is true but there is no file, otherwise the initialization
+     */
     public Game init(boolean load) {
         if (!load) {
             // init attributes
@@ -103,9 +109,14 @@ public class Game {
     /*
      * *** Méthodes
      */
-
+    /**
+     * returns the value of multiplayer
+     * @return true if multiplayer is selected, false otherwise
+     */
     public Boolean getIsMultiplayer() { return this.isMultiplayer; };
-
+    /**
+     * Runs the game
+     */
     public void run() {
         int[] coords = new int[2];
         HitType hit;
@@ -139,7 +150,7 @@ public class Game {
             done = updateScore();
             System.out.println(makeHitMessage(player1, false /* outgoing hit */, coords, hit));
 
-            System.out.println("You have reached checkpoint, game is saved.");
+            System.out.println("You have reached a checkpoint, game is saved.");
             save();
 
             if (!done && !strike) {
@@ -175,7 +186,7 @@ public class Game {
                     done = updateScore();
 
                     if (!done) {
-                        System.out.println("You have reached checkpoint, game is saved.");
+                        System.out.println("You have reached a checkpoint, game is saved.");
                         save();
                     }
                 } while (strike && !done);
@@ -189,7 +200,9 @@ public class Game {
         System.out.println(String.format("%s wins", player1.lose ? player2.getBoard().getName() : player1.getBoard().getName()));
         sin.close();
     }
-
+    /**
+     * save the game, by serializing all the information and putting it in the "savegame.dat"
+     */
     private void save() {
         try {
             if (!SAVE_FILE.exists()) {
@@ -210,7 +223,10 @@ public class Game {
             e.printStackTrace();
         }
     }
-
+    /**
+     * loads the saved game
+     * @return true if the game has been loaded succesfully, false otherwise
+     */
     private boolean loadSave() {
         if (SAVE_FILE.exists()) {
             try {
@@ -231,7 +247,10 @@ public class Game {
         }
         return false;
     }
-
+    /**
+     * checks if a player has lost
+     * @return true if the amount of ships lost is the same as the total amount of ships, false otherwise
+     */
     private boolean updateScore() {
         for (Player player : new Player[] { player1, player2 }) {
             int destroyed = 0;
@@ -249,7 +268,14 @@ public class Game {
         }
         return false;
     }
-
+    /**
+     * returns a constructed message with the information of a hit
+     * @param player player concerned
+     * @param incoming direction of the hit
+     * @param coords coordinates of the hit
+     * @param hit hit type
+     * @return message constructed
+     */
     private String makeHitMessage(Player player, boolean incoming, int[] coords, HitType hit) {
         String msg = "";
         ColorUtil.Color color = ColorUtil.Color.RESET;
@@ -272,7 +298,10 @@ public class Game {
                 (coords[1] + 1), msg);
         return ColorUtil.colorize(msg, color);
     }
-
+    /**
+     * default list of ships
+     * @return array of ships
+     */
     private static List<AbstractShip> createDefaultShips() {
         return Arrays.asList(new AbstractShip[] { new Destroyer(), new Submarine(), new Submarine(), new BattleShip(),
                 new Carrier() });

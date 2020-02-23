@@ -13,6 +13,10 @@ buildNumber.properties
 # Created by https://www.gitignore.io/api/java,linux,maven,visualstudiocode
 # Edit at https://www.gitignore.io/?templates=java,linux,maven,visualstudiocode
 
+###GAME###
+# saved Game
+savegame.dat
+
 ### Java ###
 # Compiled class file
 *.class

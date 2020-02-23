@@ -2,7 +2,9 @@ package annexes;
 
 import ships.*;
 import java.util.Scanner;
-
+/**
+ * Class used to make the interface between the information registered by the player and the information that understand the logic
+ */
 public final class InputHelper {
 
     /* **
