@@ -1,7 +1,6 @@
 package annexes;
 
 import ships.*;
-import java.util.Arrays;
 import java.util.Scanner;
 
 public final class InputHelper {

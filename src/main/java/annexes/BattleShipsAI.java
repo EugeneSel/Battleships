@@ -69,8 +69,6 @@ public class BattleShipsAI implements Serializable {
         Random rnd = new Random();
         ShipOrientation[] orientations = ShipOrientation.values();
 
-        System.out.println("hola");
-
         for (AbstractShip s : ships) {
             do {
                 // TODO use Random to pick a random x, y & orientation

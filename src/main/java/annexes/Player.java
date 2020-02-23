@@ -35,141 +35,121 @@ public class Player {
     /**
      * Read keyboard input to get ships coordinates. Place ships on given coodrinates.
      */
-    public void putShips() {
-        System.out.println("\nPlace Your ships on the board (format: A1 n):\n");
+    public void putShips() throws ArrayIndexOutOfBoundsException {
+        System.out.println("\n" + board.getName() + ", place Your ships on the board (format: A1 n):\n");
 
         InputHelper.ShipInput inputResult = null;
 
         for (int i = 0; i < NUMBER_OF_DESTROYERS + NUMBER_OF_SUBMARINES + NUMBER_OF_BATTLESHIPS + NUMBER_OF_CARRIERS; i++) {
-            if (i < NUMBER_OF_DESTROYERS) {
-                System.out.println("Enter your destroyers (size: " + ShipType.D.getSize() + ". " + Integer.toString(NUMBER_OF_DESTROYERS - i) + " more left):\n");
-                inputResult = InputHelper.readShipInput();
-                this.ships[i] = new Destroyer(inputResult.orientation);
-            } else if (i < NUMBER_OF_DESTROYERS + NUMBER_OF_SUBMARINES) {
-                System.out.println("Enter your submarines (size: " + ShipType.S.getSize() + ". " + Integer.toString(NUMBER_OF_DESTROYERS + NUMBER_OF_SUBMARINES - i) + " more left):\n");
-                inputResult = InputHelper.readShipInput();
-                this.ships[i] = new Submarine(inputResult.orientation);
-            } else if (i < NUMBER_OF_DESTROYERS + NUMBER_OF_SUBMARINES + NUMBER_OF_BATTLESHIPS) {
-                System.out.println("Enter your battleships (size: " + ShipType.B.getSize() + ". " +  Integer.toString(NUMBER_OF_DESTROYERS + NUMBER_OF_SUBMARINES + NUMBER_OF_BATTLESHIPS - i) + " more left):\n");
-                inputResult = InputHelper.readShipInput();
-                this.ships[i] = new BattleShip(inputResult.orientation);
-            } else if (i < NUMBER_OF_DESTROYERS + NUMBER_OF_SUBMARINES + NUMBER_OF_BATTLESHIPS + NUMBER_OF_CARRIERS) {
-                System.out.println("Enter your carriers (size: " + ShipType.C.getSize() + ". " +  Integer.toString(NUMBER_OF_DESTROYERS + NUMBER_OF_SUBMARINES + NUMBER_OF_BATTLESHIPS + NUMBER_OF_CARRIERS - i) + " more left):\n");
-                inputResult = InputHelper.readShipInput();
-                this.ships[i] = new Carrier(inputResult.orientation);
-            };
-            
-            switch (this.ships[i].getOrientation()) {
-                case N:
-                    if (inputResult.y - this.ships[i].getSize() + 1 < 0) {
-                        System.out.println("Your ship is out of board. Please, repeat entering:\n");
-                        i--;
+            try {
+                if (i < NUMBER_OF_DESTROYERS) {
+                    System.out.println("Enter your destroyers (size: " + ShipType.D.getSize() + ". " + Integer.toString(NUMBER_OF_DESTROYERS - i) + " more left):\n");
+                    inputResult = InputHelper.readShipInput();
+                    this.ships[i] = new Destroyer(inputResult.orientation);
+                } else if (i < NUMBER_OF_DESTROYERS + NUMBER_OF_SUBMARINES) {
+                    System.out.println("Enter your submarines (size: " + ShipType.S.getSize() + ". " + Integer.toString(NUMBER_OF_DESTROYERS + NUMBER_OF_SUBMARINES - i) + " more left):\n");
+                    inputResult = InputHelper.readShipInput();
+                    this.ships[i] = new Submarine(inputResult.orientation);
+                } else if (i < NUMBER_OF_DESTROYERS + NUMBER_OF_SUBMARINES + NUMBER_OF_BATTLESHIPS) {
+                    System.out.println("Enter your battleships (size: " + ShipType.B.getSize() + ". " +  Integer.toString(NUMBER_OF_DESTROYERS + NUMBER_OF_SUBMARINES + NUMBER_OF_BATTLESHIPS - i) + " more left):\n");
+                    inputResult = InputHelper.readShipInput();
+                    this.ships[i] = new BattleShip(inputResult.orientation);
+                } else if (i < NUMBER_OF_DESTROYERS + NUMBER_OF_SUBMARINES + NUMBER_OF_BATTLESHIPS + NUMBER_OF_CARRIERS) {
+                    System.out.println("Enter your carriers (size: " + ShipType.C.getSize() + ". " +  Integer.toString(NUMBER_OF_DESTROYERS + NUMBER_OF_SUBMARINES + NUMBER_OF_BATTLESHIPS + NUMBER_OF_CARRIERS - i) + " more left):\n");
+                    inputResult = InputHelper.readShipInput();
+                    this.ships[i] = new Carrier(inputResult.orientation);
+                };
+                
+                switch (this.ships[i].getOrientation()) {
+                    case N:
+                        if (inputResult.y - this.ships[i].getSize() + 1 < 0) {
+                            throw new ArrayIndexOutOfBoundsException("Your ship is out of board. Please, repeat entering:\n");
+                        }
+    
+                        for (int j = inputResult.y; j > inputResult.y - this.ships[i].getSize(); j--) {
+                            if (board.getShips()[inputResult.x][j] != null) {
+                                throw new ArrayIndexOutOfBoundsException("Your ship is on collision course. Please, repeat entering:\n");
+                            }
+                            
+                            if (board.isCloseToAnotherShip(inputResult.x, j)) {
+                                throw new ArrayIndexOutOfBoundsException("Current ship is too close to another one. Please, repeat entering:\n");
+                            }
+    
+                            if (j == inputResult.y - this.ships[i].getSize() + 1)
+                                board.putShip(this.ships[i], inputResult.x, inputResult.y);
+                        }
+    
                         break;
-                    }
-
-                    for (int j = inputResult.y; j > inputResult.y - this.ships[i].getSize(); j--) {
-                        if (board.getShips()[inputResult.x][j] != null) {
-                            System.out.println("Your ship is on collision course. Please, repeat entering:\n");
-                            i--;
-                            break;
+                    case S:
+                        if (inputResult.y + this.ships[i].getSize() > board.getSize()) {
+                            throw new ArrayIndexOutOfBoundsException("Your ship is out of board. Please, repeat entering:\n");
+                        }
+    
+                        for (int j = inputResult.y; j < inputResult.y + this.ships[i].getSize(); j++) {
+                            if (board.getShips()[inputResult.x][j] != null) {
+                                throw new ArrayIndexOutOfBoundsException("Your ship is on collision course. Please, repeat entering:\n");
+                            }
+    
+                            if (board.isCloseToAnotherShip(inputResult.x, j)) {
+                                throw new ArrayIndexOutOfBoundsException("Current ship is too close to another one. Please, repeat entering:\n");
+                            }
+    
+                            if (j == inputResult.y + this.ships[i].getSize() - 1)
+                                board.putShip(this.ships[i], inputResult.x, inputResult.y);
+                        }
+    
+                        break;
+                    case E:
+                        if (inputResult.x + this.ships[i].getSize() > board.getSize()) {
+                            throw new ArrayIndexOutOfBoundsException("Your ship is out of board. Please, repeat entering:\n");
+                        }
+    
+                        for (int j = inputResult.x; j < inputResult.x + this.ships[i].getSize(); j++) {
+                            if (board.getShips()[j][inputResult.y] != null) {
+                                throw new ArrayIndexOutOfBoundsException("Your ship is on collision course. Please, repeat entering:\n");
+                            } 
+                            
+                            if (board.isCloseToAnotherShip(j, inputResult.y)) {
+                                throw new ArrayIndexOutOfBoundsException("Current ship is too close to another one. Please, repeat entering:\n");
+                            }
+    
+                            if (j == inputResult.x + this.ships[i].getSize() - 1)
+                                board.putShip(this.ships[i], inputResult.x, inputResult.y);
+                        }
+    
+                        break;
+                    case W:
+                        if (inputResult.x - this.ships[i].getSize() + 1 < 0) {
+                            throw new ArrayIndexOutOfBoundsException("Your ship is out of board. Please, repeat entering:\n");
                         }
                         
-                        if (board.isCloseToAnotherShip(inputResult.x, j)) {
-                            System.out.println("Current ship is too close to another one. Please, repeat entering:\n");
-                            i--;
-                            break;
+                        for (int j = inputResult.x; j > inputResult.x - this.ships[i].getSize(); j--) {
+                            if (board.getShips()[j][inputResult.y] != null) {
+                                throw new ArrayIndexOutOfBoundsException("Your ship is on collision course. Please, repeat entering:\n");
+                            }
+    
+                            if (board.isCloseToAnotherShip(j, inputResult.y)) {
+                                throw new ArrayIndexOutOfBoundsException("Current ship is too close to another one. Please, repeat entering:\n");
+                            }
+    
+                            if (j == inputResult.x - this.ships[i].getSize() + 1)
+                                board.putShip(this.ships[i], inputResult.x, inputResult.y);
                         }
-
-                        if (j == inputResult.y - this.ships[i].getSize() + 1)
-                            board.putShip(this.ships[i], inputResult.x, inputResult.y);
-                    }
-
-                    break;
-                case S:
-                    if (inputResult.y + this.ships[i].getSize() > board.getSize()) {
-                        System.out.println("Your ship is out of board. Please, repeat entering:\n");
-                        i--;
+    
                         break;
-                    }
-
-                    for (int j = inputResult.y; j < inputResult.y + this.ships[i].getSize(); j++) {
-                        if (board.getShips()[inputResult.x][j] != null) {
-                            System.out.println("Your ship is on collision course. Please, repeat entering:\n");
-                            i--;
-                            break;
-                        }
-
-                        if (board.isCloseToAnotherShip(inputResult.x, j)) {
-                            System.out.println("Current ship is too close to another one. Please, repeat entering:\n");
-                            i--;
-                            break;
-                        }
-
-                        if (j == inputResult.y + this.ships[i].getSize() - 1)
-                            board.putShip(this.ships[i], inputResult.x, inputResult.y);
-                    }
-
-                    break;
-                case E:
-                    if (inputResult.x + this.ships[i].getSize() > board.getSize()) {
-                        System.out.println("Your ship is out of board. Please, repeat entering:\n");
-                        i--;
+                    default:
                         break;
-                    }
-
-                    for (int j = inputResult.x; j < inputResult.x + this.ships[i].getSize(); j++) {
-                        if (board.getShips()[j][inputResult.y] != null) {
-                            System.out.println("Your ship is on collision course. Please, repeat entering:\n");
-                            i--;
-                            break;
-                        } 
-                        
-                        if (board.isCloseToAnotherShip(j, inputResult.y)) {
-                            System.out.println("Current ship is too close to another one. Please, repeat entering:\n");
-                            i--;
-                            break;
-                        }
-
-                        if (j == inputResult.x + this.ships[i].getSize() - 1)
-                            board.putShip(this.ships[i], inputResult.x, inputResult.y);
-                    }
-
-                    break;
-                case W:
-                    if (inputResult.x - this.ships[i].getSize() + 1 < 0) {
-                        System.out.println("Your ship is out of board. Please, repeat entering:\n");
-                        i--;
-                        break;
-                    }
-                    
-                    for (int j = inputResult.x; j > inputResult.x - this.ships[i].getSize(); j--) {
-                        if (board.getShips()[j][inputResult.y] != null) {
-                            System.out.println("Your ship is on collision course. Please, repeat entering:\n");
-                            i--;
-                            break;
-                        }
-
-                        if (board.isCloseToAnotherShip(j, inputResult.y)) {
-                            System.out.println("Current ship is too close to another one. Please, repeat entering:\n");
-                            i--;
-                            break;
-                        }
-
-                        if (j == inputResult.x - this.ships[i].getSize() + 1)
-                            board.putShip(this.ships[i], inputResult.x, inputResult.y);
-                    }
-
-                    break;
-                default:
-                    break;
+                }
+    
+                board.print(opponentBoard);   
+            } catch (ArrayIndexOutOfBoundsException e) {
+                System.out.println(e.getMessage());
+                i--;
             }
-
-            board.print(opponentBoard);
         }
     }
 
     public HitType sendHit(int[] coords) {
-        boolean done = false;
         HitType hit = null;
 
         hit = opponentBoard.sendHit(coords[0], coords[1]);

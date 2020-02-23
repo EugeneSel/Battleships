@@ -20,35 +20,63 @@ public class Game {
     private Player player1;
     private Player player2;
     private Scanner sin;
+    private Boolean isMultiplayer;
 
     /*
      * *** Constructeurs
      */
-    public Game() {
+    public Game(boolean isMultiplayer) {
+        this.isMultiplayer = isMultiplayer;
         sin = new Scanner(System.in);
     }
 
     public Game init() {
         if (!loadSave()) {
             // init attributes
-            System.out.println("Write down Your Name:");
 
-            String playerName = "";
-            try {
-                playerName = sin.nextLine();
-            } catch (Exception e) {
-                // nop
+            String playerName1 = "";
+            String playerName2 = "AI";
+
+            if (isMultiplayer) {
+                System.out.println("Write down First Player's name:");
+
+                try {
+                    playerName1 = sin.nextLine();
+                } catch (Exception e) {
+                    // nop
+                }
+
+                System.out.println("Write down Second Player's name:");
+
+                try {
+                    playerName2 = sin.nextLine();
+                } catch (Exception e) {
+                    // nop
+                }
+            } else {
+                System.out.println("Write down your name:");
+
+                try {
+                    playerName1 = sin.nextLine();
+                } catch (Exception e) {
+                    // nop
+                }
             }
             
-            Board boardPlayer = new Board(playerName);
-            Board boardAI = new Board("AI");
+            Board boardPlayer1 = new Board(playerName1);
+            Board boardPlayer2 = new Board(playerName2);
 
-            player1 = new Player(boardPlayer, boardAI, createDefaultShips());
-            player2 = new AIPlayer(boardAI, boardPlayer, createDefaultShips());
+            player1 = new Player(boardPlayer1, boardPlayer2, createDefaultShips());
+            if (isMultiplayer)
+                player2 = new Player(boardPlayer2, boardPlayer1, createDefaultShips());
+            else 
+                player2 = new AIPlayer(boardPlayer2, boardPlayer1, createDefaultShips());
 
-            boardPlayer.print(boardAI);
             // place player ships:
+            boardPlayer1.print(boardPlayer2);
             player1.putShips();
+            if (isMultiplayer)
+                boardPlayer2.print(boardPlayer1);
             player2.putShips();
         }
         return this;
@@ -69,7 +97,7 @@ public class Game {
             boolean doneInput = false;
 
             do {
-                System.out.println("Make your shot:\n");
+                System.out.println(player1.getBoard().getName() + ", make your shot:\n");
                 InputHelper.CoordInput hitInput = InputHelper.readCoordInput();
                 
                 if (player1.getBoard().getHits()[hitInput.x][hitInput.y] != HitType.NONE) {
@@ -94,7 +122,28 @@ public class Game {
 
             if (!done && !strike) {
                 do {
+                    if (isMultiplayer) {
+                        player2.getBoard().print(player1.getBoard());
+                        doneInput = false;
+
+                        do {
+                            System.out.println(player2.getBoard().getName() + ", make your shot:\n");
+                            InputHelper.CoordInput hitInput = InputHelper.readCoordInput();
+                            
+                            if (player2.getBoard().getHits()[hitInput.x][hitInput.y] != HitType.NONE) {
+                                System.out.println("You have already shot there. Please, repeat entering\n");
+                                continue;
+                            }
+                
+                            coords = new int[2];
+                            coords[0] = hitInput.x;
+                            coords[1] = hitInput.y;
+                            doneInput = true;  
+                        } while (!doneInput);
+                    }
                     hit = player2.sendHit(coords); // TODO player2 send a hit.
+                    if (isMultiplayer)
+                        player2.getBoard().setHit(hit, coords[0], coords[1]);
 
                     strike = hit != HitType.MISS;
                     if (strike) {
