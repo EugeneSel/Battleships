@@ -59,6 +59,9 @@ public class Player implements Serializable {
                     inputResult = InputHelper.readShipInput();
                     this.ships[i] = new Carrier(inputResult.orientation);
                 };
+
+                if (inputResult.x < 0 || inputResult.x >= board.getSize() || inputResult.y < 0 || inputResult.y >= board.getSize())
+                    throw new ArrayIndexOutOfBoundsException("Your ship is out of board. Please, repeat entering:\n");    
                 
                 switch (this.ships[i].getOrientation()) {
                     case N:

@@ -40,37 +40,67 @@ public class Game {
         sin = new Scanner(System.in);
     }
 
-    public Game init(boolean load) {
+    public Game init(boolean load) throws ArrayIndexOutOfBoundsException {
         if (!load) {
             // init attributes
 
             String playerName1 = "";
             String playerName2 = "AI";
+            boolean done = false;
 
             if (isMultiplayer) {
-                System.out.println("Write down First Player's name:");
+                System.out.println("Enter the First Player's name (maximum - 30 symbols):");
 
-                try {
-                    playerName1 = sin.nextLine();
-                } catch (Exception e) {
-                    // nop
-                }
+                do {
+                    try {
+                        playerName1 = sin.nextLine();
 
-                System.out.println("Write down Second Player's name:");
+                        if (playerName1.length() <= 0)
+                            throw new ArrayIndexOutOfBoundsException("First player's name can't be left in blank. Please, repeat entering:\n");
+                        else if (playerName1.length() > 30)
+                            throw new ArrayIndexOutOfBoundsException("First player's name is too long (maximum - 30 characters). Please, repeat entering:\n");
+                    
+                        done = true;
+                    } catch (ArrayIndexOutOfBoundsException e) {
+                        System.out.println(e.getMessage());
+                    }
+                } while (!done);
 
-                try {
-                    playerName2 = sin.nextLine();
-                } catch (Exception e) {
-                    // nop
-                }
+                done = false;
+
+                System.out.println("Enter the Second Player's name:");
+
+                do {
+                    try {
+                        playerName2 = sin.nextLine();
+
+                        if (playerName2.length() <= 0)
+                            throw new ArrayIndexOutOfBoundsException("Second player's name can't be left in blank. Please, repeat entering:\n");
+                        else if (playerName2.length() > 30)
+                            throw new ArrayIndexOutOfBoundsException("Second player's name is too long (maximum - 30 characters). Please, repeat entering:\n");
+                    
+                        done = true;
+                    } catch (ArrayIndexOutOfBoundsException e) {
+                        System.out.println(e.getMessage());
+                    }
+                } while (!done);
             } else {
-                System.out.println("Write down your name:");
+                System.out.println("Enter your name:");
 
-                try {
-                    playerName1 = sin.nextLine();
-                } catch (Exception e) {
-                    // nop
-                }
+                do {
+                    try {
+                        playerName1 = sin.nextLine();
+
+                        if (playerName1.length() <= 0)
+                            throw new ArrayIndexOutOfBoundsException("Your name can't be left in blank. Please, repeat entering:\n");
+                        else if (playerName1.length() > 30)
+                            throw new ArrayIndexOutOfBoundsException("Your name is too long (maximum - 30 characters). Please, repeat entering:\n");
+                    
+                        done = true;
+                    } catch (ArrayIndexOutOfBoundsException e) {
+                        System.out.println(e.getMessage());
+                    }
+                } while (!done);
             }
             
             Board boardPlayer1 = new Board(playerName1);
@@ -119,7 +149,7 @@ public class Game {
 
             do {
                 System.out.println(player1.getBoard().getName() + ", make your shot:\n");
-                InputHelper.CoordInput hitInput = InputHelper.readCoordInput();
+                InputHelper.CoordInput hitInput = InputHelper.readCoordInput(player1.getBoard().getSize());
                 
                 if (player1.getBoard().getHits()[hitInput.x][hitInput.y] != HitType.NONE) {
                     System.out.println("You have already shot there. Please, repeat entering\n");
@@ -150,7 +180,7 @@ public class Game {
 
                         do {
                             System.out.println(player2.getBoard().getName() + ", make your shot:\n");
-                            InputHelper.CoordInput hitInput = InputHelper.readCoordInput();
+                            InputHelper.CoordInput hitInput = InputHelper.readCoordInput(player2.getBoard().getSize());
                             
                             if (player2.getBoard().getHits()[hitInput.x][hitInput.y] != HitType.NONE) {
                                 System.out.println("You have already shot there. Please, repeat entering\n");

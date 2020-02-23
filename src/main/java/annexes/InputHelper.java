@@ -1,6 +1,8 @@
 package annexes;
 
 import ships.*;
+
+import java.lang.reflect.InvocationTargetException;
 import java.util.Scanner;
 
 public final class InputHelper {
@@ -49,21 +51,20 @@ public final class InputHelper {
                         res.orientation = orientation;
                         done = true;
                     }
-                    
                 }
             } catch (Exception e) {
-                // nop
+               
             }
 
             if (!done) {
-                System.err.println("Format incorrect! Entrez la position sous forme 'A1 n'");
+                System.err.println("Format is incorrect! Please, repeat entering (in the format such as 'A1 n'):\n");
             }
         } while (!done && sin.hasNextLine());
 
         return res;
     }
 
-    public static CoordInput readCoordInput() {
+    public static CoordInput readCoordInput(int boardSize) throws ArrayIndexOutOfBoundsException {
         @SuppressWarnings("resource")
         Scanner sin = new Scanner(System.in);
         CoordInput res = new CoordInput();
@@ -74,13 +75,19 @@ public final class InputHelper {
                 String coord = sin.nextLine().toLowerCase();
                 res.x = coord.charAt(0) - 'a';
                 res.y = Integer.parseInt(coord.substring(1, coord.length())) - 1;
+
+                if (res.x < 0 || res.x >= boardSize || res.y < 0 || res.y >= boardSize)
+                    throw new ArrayIndexOutOfBoundsException("Format is incorrect! Please, repeat entering (in the format such as 'A1'):\n");
+
                 done = true;
+            } catch (ArrayIndexOutOfBoundsException e) {
+                System.out.println(e.getMessage());
             } catch (Exception e) {
-                // nop
+                
             }
 
             if (!done) {
-                System.err.println("Format incorrect! Entrez la position sous forme 'A0'");
+                System.err.println("Format is incorrect! Please, repeat entering (in the format such as 'A1'):");
             }
         } while (!done && sin.hasNextLine());
 
