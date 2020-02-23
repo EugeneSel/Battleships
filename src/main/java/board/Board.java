@@ -106,6 +106,68 @@ public class Board implements IBoard, Serializable {
      */
     public void setHit(HitType hit, int x, int y){
         hits[x][y] = hit;
+
+        int dx = 0;
+        int dy = 0;
+
+        // Put additional hits around sucessfull hit, where no other ship could be:
+        if (hit == HitType.HIT) {
+            if (x - 1 >= 0 && y - 1 >= 0 && hits[x - 1][y - 1] == HitType.NONE)
+                hits[x - 1][y - 1] = HitType.MISS;
+            if (x + 1 < size && y - 1 >= 0 && hits[x + 1][y - 1] == HitType.NONE)
+                hits[x + 1][y - 1] = HitType.MISS;
+            if (x - 1 >= 0 && y + 1 < size && hits[x - 1][y + 1] == HitType.NONE)
+                hits[x - 1][y + 1] = HitType.MISS;
+            if (x + 1 < size && y + 1 < size && hits[x + 1][y + 1] == HitType.NONE)
+                hits[x + 1][y + 1] = HitType.MISS;
+        } else if (hit == HitType.KILL) {
+            if (x - 1 >= 0 && y - 1 >= 0 && hits[x - 1][y - 1] == HitType.NONE)
+                hits[x - 1][y - 1] = HitType.MISS;
+            if (x + 1 < size && y - 1 >= 0 && hits[x + 1][y - 1] == HitType.NONE)
+                hits[x + 1][y - 1] = HitType.MISS;
+            if (x - 1 >= 0 && y + 1 < size && hits[x - 1][y + 1] == HitType.NONE)
+                hits[x - 1][y + 1] = HitType.MISS;
+            if (x + 1 < size && y + 1 < size && hits[x + 1][y + 1] == HitType.NONE)
+                hits[x + 1][y + 1] = HitType.MISS;
+
+            if (x - 1 >= 0) {
+                if (hits[x - 1][y] != HitType.HIT)
+                    hits[x - 1][y] = HitType.MISS;
+                else
+                    dx = -1;
+            }
+            if (x + 1 < size) {
+                if (hits[x + 1][y] != HitType.HIT)
+                    hits[x + 1][y] = HitType.MISS;
+                else
+                    dx = 1;
+            }
+            if (y - 1 >= 0) {
+                if (hits[x][y - 1] != HitType.HIT)
+                    hits[x][y - 1] = HitType.MISS;
+                else
+                    dy = -1;
+            }
+            if (y + 1 < size) {
+                if (hits[x][y + 1] != HitType.HIT)
+                    hits[x][y + 1] = HitType.MISS;
+                else
+                    dy = 1;
+            }
+
+            x += dx;
+            y += dy;
+
+            while (x + dx >= 0 && x + dx < size && y + dy >= 0 && y + dy < size) {
+                if (hits[x + dx][y + dy] != HitType.HIT) {
+                    hits[x + dx][y + dy] = HitType.MISS;
+                    break;
+                }
+
+                x += dx;
+                y += dy;
+            }
+        }
     }
     /**
      * Returns the Hit type saved in the Hits table in the specified coordinates
